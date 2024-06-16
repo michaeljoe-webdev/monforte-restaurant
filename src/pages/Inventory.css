@@ -40,8 +40,24 @@ button {
   cursor: pointer;
 }
 
+
 button:hover {
   background-color: var(--button-hover-bg-color);
+}
+
+
+#clear {
+  padding: 10px 20px;
+  background-color: grey;
+  color: var(--button-text-color);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+#clear:hover {
+  background-color: rgb(103, 103, 103);
 }
 
 table {
