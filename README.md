@@ -66,12 +66,8 @@ Develop a web application for a restaurant that allows users to keep track of th
     yarn dev
     ```
 ## References
-- Inventory Page:
-   (https://github.com/michaeljoe-webdev/monforte-restaurant/blob/main/src/pages/Inventory.jsx)
-
-![Database Table Schema](https://github.com/michaeljoe-webdev/monforte-restaurant/blob/main/src/assets/menu.json)
-- Menu JSON used for Firebase:
-    (https://github.com/michaeljoe-webdev/monforte-restaurant/blob/main/src/assets/menu.json)
+-[Inventory Page](https://github.com/michaeljoe-webdev/monforte-restaurant/blob/main/src/pages/Inventory.jsx)
+-[Menu JSON used for Firebase](https://github.com/michaeljoe-webdev/monforte-restaurant/blob/main/src/assets/menu.json)
 
 ## Technologies Used
     Front-end
