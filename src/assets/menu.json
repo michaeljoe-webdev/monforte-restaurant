@@ -1,0 +1,92 @@
+{
+  "restaurantMenu": {
+    "categories": {
+      "burgers": {
+        "items": [
+          {
+            "name": "Big Mac",
+            "size": "standard",
+            "price": 169.00,
+            "cost": 85.00,
+            "amountInStock": 100
+          },
+          {
+            "name": "Quarter Pounder with Cheese",
+            "size": "standard",
+            "price": 185.00,
+            "cost": 95.00,
+            "amountInStock": 80
+          }
+        ]
+      },
+      "desserts": {
+        "items": [
+          {
+            "name": "Chocolate Sundae",
+            "size": "small",
+            "price": 70.00,
+            "cost": 35.00,
+            "amountInStock": 50
+          },
+          {
+            "name": "Chocolate Sundae",
+            "size": "medium",
+            "price": 90.00,
+            "cost": 45.00,
+            "amountInStock": 50
+          },
+          {
+            "name": "Chocolate Sundae",
+            "size": "large",
+            "price": 110.00,
+            "cost": 55.00,
+            "amountInStock": 50
+          }
+        ]
+      },
+      "meals": {
+        "items": [
+          {
+            "name": "Chicken Fillet Meal",
+            "size": "standard",
+            "price": 250.00,
+            "cost": 125.00,
+            "amountInStock": 60
+          },
+          {
+            "name": "Fish Fillet Meal",
+            "size": "standard",
+            "price": 230.00,
+            "cost": 115.00,
+            "amountInStock": 60
+          }
+        ]
+      },
+      "drinks": {
+        "items": [
+          {
+            "name": "Coke",
+            "size": "small",
+            "price": 50.00,
+            "cost": 25.00,
+            "amountInStock": 100
+          },
+          {
+            "name": "Coke",
+            "size": "medium",
+            "price": 60.00,
+            "cost": 30.00,
+            "amountInStock": 100
+          },
+          {
+            "name": "Coke",
+            "size": "large",
+            "price": 70.00,
+            "cost": 35.00,
+            "amountInStock": 100
+          }
+        ]
+      }
+    }
+  }
+}

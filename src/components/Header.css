@@ -1,0 +1,58 @@
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1px;
+    background-color: #333;
+    color: #fff;
+}
+
+.logo {
+    width: 80px;
+    height: auto;
+}
+
+.restaurant-name {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.5rem;
+    margin: 10px 0;
+}
+
+.datetime {
+    text-align: right;  
+}
+
+.date, .time {
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .restaurant-name {
+        font-size: 1.2rem;
+    }
+
+    .date, .time {
+        font-size: 0.9rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        width: 60px;
+    }
+
+    .restaurant-name {
+        font-size: 1rem;
+    }
+
+    .date, .time {
+        font-size: 0.8rem;
+    }
+}

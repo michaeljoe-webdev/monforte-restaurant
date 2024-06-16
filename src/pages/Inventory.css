@@ -1,0 +1,196 @@
+/* Reset some default browser styles */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.inventory-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1, h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+select, input {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  width: 200px;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--button-hover-bg-color);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid var(--border-color);
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: var(--th-bg-color);
+  color: var(--text-color);
+}
+
+tr:nth-child(even) {
+  background-color: var(--tr-odd-bg-color);
+}
+
+tr:hover {
+  background-color: var(--tr-hover-bg-color);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.actions .edit {
+  padding: 5px 10px;
+  background-color: var(--action-edit-button-bg-color);
+  color: var(--button-text-color);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.actions .delete {
+  padding: 5px 10px;
+  background-color: var(--action-delete-button-bg-color);
+  color: var(--button-text-color);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.actions .edit:hover {
+  background-color: var(--action-edit-button-hover-bg-color);
+}
+
+.actions .delete:hover {
+  background-color: var(--action-delete-button-hover-bg-color);
+}
+
+@media (max-width: 768px) {
+  form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  select, input {
+    width: 100%;
+  }
+
+  table {
+    display: block;
+    width: 100%;
+  }
+
+  thead {
+    display: none; /* Hide the header row */
+  }
+
+  tbody, tr, th, td {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  tbody tr {
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px;
+  }
+
+  tbody td {
+    padding: 5px 0;
+  }
+
+  tbody td:before {
+    content: attr(data-label);
+    font-weight: bold;
+    width: 100%;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  th, td {
+    box-sizing: border-box;
+  }
+}
+
+
+/* Light and dark theme variables */
+:root {
+  --bg-color: #f5f5f5;
+  --text-color: #333;
+  --border-color: #ccc;
+  --button-bg-color: #4CAF50;
+  --button-text-color: white;
+  --button-hover-bg-color: #45a049;
+  --th-bg-color: #f2f2f2;
+  --tr-even-bg-color: #f9f9f9;
+  --tr-hover-bg-color: #ddd;
+  --action-edit-button-bg-color: #007bff;
+  --action-edit-button-hover-bg-color: #0056b3;
+  --action-delete-button-bg-color: #fe6c6c;
+  --action-delete-button-hover-bg-color: #fa5656;
+}
+/* 
+body.light {
+  --bg-color: #f5f5f5;
+  --text-color: #333;
+} */
+
+body.dark {
+  --bg-color: #333;
+  --text-color: #333;
+  --border-color: #555;
+  --button-bg-color: #888;
+  --button-hover-bg-color: #666;
+  --th-bg-color: #444;
+  --tr-even-bg-color: #555;
+  --tr-hover-bg-color: #666;
+  --action-button-bg-color: #aaa;
+  --action-button-hover-bg-color: #888;
+}
+
+.inventory-page.light {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.inventory-page.dark {
+  background-color: #333;
+  color: #fff;
+}
