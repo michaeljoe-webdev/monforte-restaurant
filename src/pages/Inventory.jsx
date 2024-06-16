@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { db } from '../services/firebaseFunctions';
-import { ref, onValue, push, set, update, remove } from 'firebase/database';
+import { ref, onValue, set, update, remove } from 'firebase/database';
 
 import './Inventory.css';
-
 
 const InventoryPage = () => {
   const [categories, setCategories] = useState([]);
@@ -19,6 +18,9 @@ const InventoryPage = () => {
   const theme = useSelector(state => state.userData.theme);
   const [isEditing, setIsEditing] = useState(false);
   const [editItemId, setEditItemId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [alert, setAlert] = useState({ visible: false, message: '', type: '' });
+  const editFormRef = useRef(null);
 
   useEffect(() => {
     const menuRef = ref(db, 'restaurantMenu/categories');
@@ -52,50 +54,55 @@ const InventoryPage = () => {
     const categoryRef = ref(db, `restaurantMenu/categories/${category}/items/`);
     let newIndex = 0;
 
-    if (isEditing) {
+    try {
+      if (isEditing) {
+        const itemRef = ref(db, `restaurantMenu/categories/${category}/items/${editItemId}`);
+        await update(itemRef, {
+          name,
+          price: parseFloat(price),
+          cost: parseFloat(cost),
+          amountInStock: parseInt(amountInStock, 10),
+          size,
+        });
+        setIsEditing(false);
+        setEditItemId(null);
+        showAlert('Item updated successfully!', 'success');
+      } else {
+        await onValue(categoryRef, (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            const keys = Object.keys(data);
+            const indices = keys.map(key => parseInt(key));
+            newIndex = Math.max(...indices) + 1;
+          } else {
+            newIndex = 0;
+          }
+        }, {
+          onlyOnce: true
+        });
 
-      const itemRef = ref(db, `restaurantMenu/categories/${category}/items/${editItemId}`);
-      await update(itemRef, {
-        name,
-        price: parseFloat(price),
-        cost: parseFloat(cost),
-        amountInStock: parseInt(amountInStock, 10),
-        size,
-      });
-      setIsEditing(false);
-      setEditItemId(null);
-    } else {
-      await onValue(categoryRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          const keys = Object.keys(data);
-          const indices = keys.map(key => parseInt(key));
-          newIndex = Math.max(...indices) + 1;
-        } else {
-          newIndex = 0;
-        }
-      }, {
-        onlyOnce: true
-      });
+        const newItemRef = ref(db, `restaurantMenu/categories/${category}/items/${newIndex}`);
+        await set(newItemRef, {
+          name,
+          price: parseFloat(price),
+          cost: parseFloat(cost),
+          amountInStock: parseInt(amountInStock, 10),
+          size,
+        });
+        showAlert('Item added successfully!', 'success');
+      }
 
-      const newItemRef = ref(db, `restaurantMenu/categories/${category}/items/${newIndex}`);
-      await set(newItemRef, {
-        name,
-        price: parseFloat(price),
-        cost: parseFloat(cost),
-        amountInStock: parseInt(amountInStock, 10),
-        size,
+      setNewItem({
+        category: '',
+        name: '',
+        price: '',
+        cost: '',
+        amountInStock: '',
+        size: 'standard',
       });
+    } catch (error) {
+      showAlert('Operation failed. Please try again.', 'error');
     }
-
-    setNewItem({
-      category: '',
-      name: '',
-      price: '',
-      cost: '',
-      amountInStock: '',
-      size: 'standard',
-    });
   };
 
   const handleEdit = (category, key, item) => {
@@ -109,73 +116,110 @@ const InventoryPage = () => {
     });
     setIsEditing(true);
     setEditItemId(key);
+    editFormRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleDelete = async (category, itemId) => {
     const itemRef = ref(db, `restaurantMenu/categories/${category}/items/${itemId}`);
-    await remove(itemRef);
-    setCategories((prevItems) =>
-      prevItems.map((cat) => {
-        if (cat.id === category) {
-          return {
-            ...cat,
-            items: cat.items.filter((item) => item.id !== itemId),
-          };
-        }
-        return cat;
-      })
-    );
+    try {
+      await remove(itemRef);
+      setCategories((prevItems) =>
+        prevItems.map((cat) => {
+          if (cat.id === category) {
+            return {
+              ...cat,
+              items: cat.items.filter((item) => item.id !== itemId),
+            };
+          }
+          return cat;
+        })
+      );
+      showAlert('Item deleted successfully!', 'success');
+    } catch (error) {
+      showAlert('Delete operation failed. Please try again.', 'error');
+    }
   };
+
+  const showAlert = (message, type) => {
+    setAlert({ visible: true, message, type });
+    setTimeout(() => {
+      setAlert({ visible: false, message: '', type: '' });
+    }, 3000);
+  };
+
+  const filteredItems = categories.map(category => ({
+    ...category,
+    items: category.items && Object.keys(category.items)
+      .filter(key => category.items[key].name.toLowerCase().includes(searchQuery.toLowerCase()))
+      .reduce((obj, key) => {
+        obj[key] = category.items[key];
+        return obj;
+      }, {})
+  }));
 
   return (
     <div className={`inventory-page ${theme}`}>
-      <form onSubmit={handleSubmit}>
-        <select name="category" value={newItem.category} onChange={handleChange}>
-          <option value="">Select Category</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.id.charAt(0).toUpperCase() + category.id.slice(1)}
-            </option>
-          ))}
-        </select>
-        <input
-          type="text"
-          name="name"
-          value={newItem.name}
-          placeholder="Item Name"
-          onChange={handleChange}
-        />
-        <input
-          type="number"
-          name="price"
-          value={newItem.price}
-          placeholder="Price (PHP)"
-          onChange={handleChange}
-        />
-        <input
-          type="number"
-          name="cost"
-          value={newItem.cost}
-          placeholder="Cost (PHP)"
-          onChange={handleChange}
-        />
-        <input
-          type="number"
-          name="amountInStock"
-          value={newItem.amountInStock}
-          placeholder="Amount in Stock"
-          onChange={handleChange}
-        />
-        <select name="size" value={newItem.size} onChange={handleChange}>
-          <option value="standard">Standard</option>
-          <option value="small">Small</option>
-          <option value="medium">Medium</option>
-          <option value="large">Large</option>
-        </select>
-        <button type="submit">{isEditing ? 'Update Item' : 'Add Item'}</button>
-      </form>
+      {alert.visible && (
+        <div className={`alert ${alert.type}`}>
+          {alert.message}
+        </div>
+      )}
+      <div ref={editFormRef}>
+        <br/>
+        <form onSubmit={handleSubmit}>
+          <select name="category" value={newItem.category} onChange={handleChange}>
+            <option value="">Select Category</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.id.charAt(0).toUpperCase() + category.id.slice(1)}
+              </option>
+            ))}
+          </select>
+          <input
+            type="text"
+            name="name"
+            value={newItem.name}
+            placeholder="Item Name"
+            onChange={handleChange}
+          />
+          <input
+            type="number"
+            name="price"
+            value={newItem.price}
+            placeholder="Price (PHP)"
+            onChange={handleChange}
+          />
+          <input
+            type="number"
+            name="cost"
+            value={newItem.cost}
+            placeholder="Cost (PHP)"
+            onChange={handleChange}
+          />
+          <input
+            type="number"
+            name="amountInStock"
+            value={newItem.amountInStock}
+            placeholder="Amount in Stock"
+            onChange={handleChange}
+          />
+          <select name="size" value={newItem.size} onChange={handleChange}>
+            <option value="standard">Standard</option>
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+          </select>
+          <button type="submit">{isEditing ? 'Update Item' : 'Add Item'}</button>
+        </form>
+      </div>
 
       <h2>Menu Items</h2>
+      <input
+        type="text"
+        placeholder="Search items"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
       <table>
         <thead>
           <tr>
@@ -189,7 +233,7 @@ const InventoryPage = () => {
           </tr>
         </thead>
         <tbody>
-          {categories.map((category) =>
+          {filteredItems.map((category) =>
             category.items && Object.keys(category.items).map((key) => (
               <tr key={key}>
                 <td>{category.id.charAt(0).toUpperCase() + category.id.slice(1)}</td>

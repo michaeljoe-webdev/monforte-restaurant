@@ -7,8 +7,6 @@ import './Navigation.css';
 const Navigation = () => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
-  // const [selectedItem, setSelectedItem] = useState('Dashboard');
-  // const [theme, setTheme] = useState('light'); // Manage the theme
   const dropdownRef = useRef(null);
   const theme = useSelector(state => state.userData.theme)
   let selectedItem = useSelector(state => state.userData.route.toUpperCase())
@@ -32,13 +30,11 @@ const Navigation = () => {
   const handleItemClick = (item) => {
     let itemRoute = item.toLowerCase() == 'dashboard' ? '' : item.toLowerCase()
     dispatch(routesAction( itemRoute ));
-    // setSelectedItem(item);
     selectedItem = item
-    setIsOpen(false); // Close sidebar on item click
+    setIsOpen(false);
   };
   
   const toggleTheme = () => {
-    // setTheme(theme === 'light' ? 'dark' : 'light');
     dispatch(themeAction( theme === 'light' ? 'dark' : 'light' ));
   };
 
@@ -49,7 +45,8 @@ const Navigation = () => {
           <button ref={dropdownRef} className="hamburger" onClick={() => setIsOpen(!isOpen)}>
             &#9776;
           </button>
-          <h1 className="title">{selectedItem ? selectedItem : 'DASHBOARD'}</h1>
+          {/* <h1 className="title">{selectedItem ? selectedItem : 'DASHBOARD'}</h1> */}
+          <h1 className="title">{selectedItem ? selectedItem : 'INVENTORY'}</h1>
           <button className="theme" onClick={toggleTheme}>
           {theme === 'light' ? (
               <i className='fas fa-moon'></i>
@@ -62,7 +59,7 @@ const Navigation = () => {
         <ul className="sidebar-items">
           {/* <li onClick={() => handleItemClick('Dashboard')}><Link to="/" className="nav-link"><i className='fas fa-home'></i> Dashboard</Link></li> */}
           {/* <li onClick={() => handleItemClick('Order')}><Link to="/order" className="nav-link"><i className='fas fa-cart-plus'></i> Order</Link></li> */}
-          <li onClick={() => handleItemClick('Inventory')}><Link to="/inventory" className="nav-link"><i className='fas fa-archive '></i> Inventory</Link></li>
+          <li onClick={() => handleItemClick('Inventory')}><Link to="/" className="nav-link"><i className='fas fa-archive '></i> Inventory</Link></li>
           {/* <li onClick={() => handleItemClick('Payment')}><Link to="/payment" className="nav-link"><i className='fas fa-credit-card'></i> Payment</Link></li> */}
           {/* <li onClick={() => handleItemClick('Settings')}><Link to="/settings" className="nav-link"><i className='fas fa-cog'></i> Settings</Link></li> */}
         </ul>
