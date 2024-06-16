@@ -82,7 +82,7 @@ tr:nth-child(even) {
 }
 
 tr:hover {
-  background-color: var(--tr-hover-bg-color);
+  background-color: #878989;
 }
 
 .actions {
@@ -90,29 +90,31 @@ tr:hover {
   gap: 10px;
 }
 
-.actions .edit {
+#edit {
   padding: 5px 10px;
   background-color: var(--action-edit-button-bg-color);
   color: var(--button-text-color);
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  margin: 2px;
 }
 
-.actions .delete {
+#delete {
   padding: 5px 10px;
   background-color: var(--action-delete-button-bg-color);
   color: var(--button-text-color);
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  margin: 2px;
 }
 
-.actions .edit:hover {
+#edit:hover {
   background-color: var(--action-edit-button-hover-bg-color);
 }
 
-.actions .delete:hover {
+#delete:hover {
   background-color: var(--action-delete-button-hover-bg-color);
 }
 
@@ -153,8 +155,6 @@ tr:hover {
   }
 
   tbody td:before {
-    content: attr(data-label);
-    font-weight: bold;
     width: 100%;
     display: block;
     margin-bottom: 5px;

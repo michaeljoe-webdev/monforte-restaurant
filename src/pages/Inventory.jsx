@@ -21,6 +21,7 @@ const InventoryPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [alert, setAlert] = useState({ visible: false, message: '', type: '' });
   const editFormRef = useRef(null);
+  const [totalCost, setTotalCost] = useState(0);
 
   useEffect(() => {
     const menuRef = ref(db, 'restaurantMenu/categories');
@@ -32,6 +33,17 @@ const InventoryPage = () => {
           ...data[key],
         }));
         setCategories(items);
+
+        // Calculate total cost
+        let total = 0;
+        items.forEach(category => {
+          if (category.items) {
+            Object.values(category.items).forEach(item => {
+              total += parseFloat(item.cost);
+            });
+          }
+        });
+        setTotalCost(total);
       }
     }, (error) => {
       console.error("Error fetching data: ", error);
@@ -229,6 +241,9 @@ const InventoryPage = () => {
       </div>
 
       <h2>Menu Items</h2>
+      <div className="overview">
+        <p>Total Cost Expense: PHP {totalCost.toFixed(2)}</p>
+      </div>
       <input
         type="text"
         placeholder="Search items"
@@ -251,15 +266,15 @@ const InventoryPage = () => {
           {filteredItems.map((category) =>
             category.items && Object.keys(category.items).map((key) => (
               <tr key={key}>
-                <td>{category.id.charAt(0).toUpperCase() + category.id.slice(1)}</td>
+                <td><bold>{category.id.charAt(0).toUpperCase() + category.id.slice(1)}</bold></td>
                 <td>{category.items[key].name}</td>
                 <td>{category.items[key].price}</td>
                 <td>{category.items[key].cost}</td>
                 <td>{category.items[key].amountInStock}</td>
                 <td>{category.items[key].size}</td>
-                <td className="actions">
-                  <button className="edit" onClick={() => handleEdit(category.id, key, { id: key, ...category.items[key] })}>Edit</button>
-                  <button className="delete" onClick={() => handleDelete(category.id, key)}>Delete</button>
+                <td>
+                  <button onClick={() => handleEdit(category.id, key, category.items[key])} id="edit">Edit</button>
+                  <button onClick={() => handleDelete(category.id, key)} id="delete">Delete</button>
                 </td>
               </tr>
             ))
