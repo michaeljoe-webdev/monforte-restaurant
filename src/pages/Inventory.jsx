@@ -34,12 +34,11 @@ const InventoryPage = () => {
         }));
         setCategories(items);
 
-        // Calculate total cost
         let total = 0;
         items.forEach(category => {
           if (category.items) {
             Object.values(category.items).forEach(item => {
-              total += parseFloat(item.cost);
+              total += parseFloat(item.cost) * item.amountInStock;
             });
           }
         });
